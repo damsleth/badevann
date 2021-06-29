@@ -1,0 +1,13 @@
+{
+  "name": "badevann",
+  "version": "1.0.0",
+  "description": "badetemperaturer",
+  "bin": "bin/badevann.mjs",
+  "keywords": ["badevann"],
+  "author": "damsleth",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "inquirer": "^8.1.1"
+  }
+}
