@@ -6,12 +6,12 @@ import axios from 'axios'
 import chalk from 'chalk'
 
 // remove ø from station names and lowercase them, for use in urls
-Object.prototype.slugify = function () { return this.toString().toLowerCase().replace(/ø/g, 'o') }
+const slugify = (str) => str.toString().toLowerCase().replace(/ø/g, 'o')
 // slugify all params first
-const args = process.argv.slice(2).toString().slugify().split(",")
+const args = slugify(process.argv.slice(2).toString()).split(",")
 // convenience method for checking if a string contains one of the passed args
 // stripping away dashes, since some use them, some don't - doesn't matter here
-const hasArg = (str) => [].slice.call(args).some(a => a.replace(/\-/g, '') === str.slugify())
+const hasArg = (str) => [].slice.call(args).some(a => a.replace(/\-/g, '') === slugify(str))
 // logging if 'debug' parameter is passed
 const log = (str) => { hasArg('debug') && console.log(str) }
 log(`App started`)
@@ -41,7 +41,7 @@ log(`ARGS: ${args}`)
 // and if so, parse the answer
 // if not, trigger the station picker
 stations.some(station => args.some(arg => {
-    if (arg === station.value.slugify() || parseFloat(arg) === station.key) {
+    if (arg === slugify(station.value) || parseFloat(arg) === station.key) {
         log(`arg ${arg} matches station ${station.value}, parsing...`)
         parseAnswer([station.value]); return true
     }
@@ -56,7 +56,7 @@ function stationPicker() {
 // parse the station name from inquirer or passed argument
 function parseAnswer(stationObj) {
     let stationName = Object.values(stationObj)
-    let url = `${domain}${stationName.slugify()}${suffix}`
+    let url = `${domain}${slugify(stationName)}${suffix}`
     log(`fetching url ${url}`)
     axios({ url: url, responseType: 'text', method: 'get' })
         .then(res => {
@@ -89,6 +89,7 @@ function parseAnswer(stationObj) {
             } else {
                 console.log(`${temp(celcius)}`)
             }
+            process.exit(0)
         }).catch((error) => {
             // error handling
             if (hasArg('debug')) {
