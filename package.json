@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "badetemperaturer",
   "bin": "bin/badevann.mjs",
-  "keywords": ["badevann"],
+  "keywords": [
+    "badevann"
+  ],
   "author": "damsleth",
   "license": "ISC",
   "dependencies": {
