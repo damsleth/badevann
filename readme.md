@@ -1,10 +1,10 @@
 # 🏝 BADEVANN 🏊‍♂️
-`badevann` henter vanntemperaturer fra badevann.no og lister ut resultatet i konsollen.
+`badevann` henter vanntemperaturer fra internett og lister ut resultatet i konsollen.
 
 # INSTALLASJON  💾
 bruk kommandolinjeverktøyet `npm`, som følger med [node.js](https://nodejs.org/)  
-node v14 er anbefalt, men v12 er også støttet. Ingen andre versjoner er testet.
-
+node v18 er påkrevd, siden badevann bruker den innebygde fetch-modulen og top-level async
+****
 `npm i -g https://github.com/damsleth/badevann`
 
 # BRUK 💻
@@ -20,7 +20,7 @@ Skrive `badevann <nummer>` for å hente temperaturer fra badeplassen som matcher
 `iso` vis tidspunkt for måleravlesning på ISO 8601-format  
 
 # OM DATAENE 💽
-Dataene kommer fra badevann.no. Ved feil i appen, sjekk nettsiden eller send en PR
+Dataene kommer primært fra YR. Ved feil i appen, sjekk nettsiden eller send en PR
 
 # LISENS 🤷‍♂️
 ### [WTFPL](http://www.wtfpl.net/) 

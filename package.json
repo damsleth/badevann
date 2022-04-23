@@ -1,15 +1,21 @@
 {
   "name": "badevann",
-  "version": "1.0.1",
-  "description": "badetemperaturer",
+  "type": "module",
+  "version": "2.0",
+  "description": "badetemperaturer fra hele norge",
   "bin": "bin/badevann.mjs",
   "keywords": [
-    "badevann"
+    "badevann",
+    "vanntemperatur",
+    "temperature"
   ],
   "author": "damsleth",
-  "license": "ISC",
+  "license": "WTFPL",
   "dependencies": {
-    "axios": "^0.21.1",
-    "inquirer": "^8.1.1"
+    "inquirer": "*",
+    "chalk": "*"
+  },
+  "engines": {
+    "node": "18.0.0"
   }
 }
