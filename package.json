@@ -1,7 +1,7 @@
 {
   "name": "badevann",
   "type": "module",
-  "version": "2.0",
+  "version": "2.0.0",
   "description": "badetemperaturer fra hele norge",
   "bin": "bin/badevann.mjs",
   "keywords": [
