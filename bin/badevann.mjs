@@ -7,7 +7,7 @@ import chalk from 'chalk'
 // todo DRY up fetching of regions/counties/beaches
 
 //TODO GET ALL WATER TEMPS, IMPLEMENT SEARCH AS YOU TYPE!!
-https://www.yr.no/api/v0/regions/NO/watertemperatures
+// https://www.yr.no/api/v0/regions/NO/watertemperatures
 
 
 const RegionTypes = {
