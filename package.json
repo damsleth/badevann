@@ -12,8 +12,8 @@
   "author": "damsleth",
   "license": "WTFPL",
   "dependencies": {
-    "inquirer": "*",
-    "chalk": "*"
+    "inquirer": "^8.2.2",
+    "chalk": "^5.0.1"
   },
   "engines": {
     "node": "18.0.0"

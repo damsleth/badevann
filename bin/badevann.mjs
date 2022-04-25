@@ -6,12 +6,9 @@ import chalk from 'chalk'
 
 // todo DRY up fetching of regions/counties/beaches
 
-// EXAMPLE URL FOR REGION PICKER
-// https://www.yr.no/api/v0/regions/NO
-// EXAMPLE URL FOR COUNTY PICKER
-// https://www.yr.no/api/v0/regions/NO-30
-// EXAMPLE URL FOR BEACH PICKER
-// https://www.yr.no/api/v0/regions/NO-30-3024/watertemperatures
+//TODO GET ALL WATER TEMPS, IMPLEMENT SEARCH AS YOU TYPE!!
+https://www.yr.no/api/v0/regions/NO/watertemperatures
+
 
 const RegionTypes = {
   County: { name: "County", plural: "Counties", localName: "Fylke" },
