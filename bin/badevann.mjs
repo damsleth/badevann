@@ -1,4 +1,4 @@
-#! /usr/bin/env node --no-warnings
+#! /usr/bin/env node --experimental-modules --no-warnings
 // the above is for declaring the runtime, i.e node, and suppressing the ESM modules warning (not needed in node >=14)
 
 import inquirer from 'inquirer'
