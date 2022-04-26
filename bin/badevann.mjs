@@ -7,9 +7,6 @@ import InterruptedPrompt from 'inquirer-interrupted-prompt'
 InterruptedPrompt.replaceAllDefaults(inquirer)
 inquirer.registerPrompt('autocomplete', InterruptedPrompt.from(autocompletePrompt))
 
-// todo caching so yr.no won't hate us
-// todo accept param, so we can pass a beach name and fetch the it
-
 const RegionTypes = {
   County: { name: "County", plural: "Counties", localName: "Fylke" },
   Municipality: { name: "Municipality", plural: "Municipalities", localName: "Kommune" },
@@ -21,7 +18,6 @@ const menu = [
   { name: "🗺  Velg fylke", action: chooseRegion, param: RegionTypes.County },
   { name: "📍 Velg kommune", action: chooseRegion, param: RegionTypes.Municipality },
   { name: "📈  Høyeste badetemperaturer i dag", action: getHighestTemperatures },
-  // { name: "🏖  Velg blant alle badeplasser", action: chooseRegion, param: RegionTypes.Beach },
   { name: "❓ Hjelp", action: showHelpAndMenu },
   { name: "👋 Avslutt", action: quitApp }
 ]
@@ -54,9 +50,7 @@ try {
   console.log("ERROR! quitting")
 }
 
-function showMenu() {
-  chooseMenu(menu).then(answer => { answer && answer.action(answer.param) })
-}
+function showMenu() { chooseMenu(menu).then(answer => { answer && answer.action(answer.param) }) }
 
 function chooseMenu(menuChoices) {
   log(`Listing menu`)
@@ -244,11 +238,13 @@ function showHelp() {
 }
 
 function showHelpAndMenu() {
+  console.clear()
   showHelp()
   showMenu()
 }
 
 function showHelpAndExit() {
+  console.clear()
   showHelp()
   process.exit(0)
 }
