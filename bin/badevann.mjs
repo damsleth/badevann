@@ -32,8 +32,8 @@ const allTemps = await fetch(apiEndpoint).then(r => r.json().then(d => d)),
   counties = [], municipalities = [], beaches = []
 if (!allTemps) { throw new Error('Could not fetch water temperatures') }
 allTemps.forEach(temp => {
-  counties.indexOf(temp.location.region.name) === -1 && counties.push(temp.location.region.name)
-  municipalities.indexOf(temp.location.subregion.name) === -1 && municipalities.push(temp.location.subregion.name)
+  counties.indexOf(temp.location.region?.name) === -1 && counties.push(temp.location.region?.name)
+  municipalities.indexOf(temp.location.subregion?.name) === -1 && municipalities.push(temp.location.subregion?.name)
   beaches.indexOf(temp.location.name) === -1 && beaches.push(temp.location.name)
 })
 counties.sort()
@@ -118,9 +118,9 @@ function chooseRegion(regionType) {
       logTemp(allTemps.find(t => t.location.name === regionChoice.name))
     }
     else if (regionType == RegionTypes.County) {
-      searchForBeach(allTemps.filter(t => t.location.region.name === regionChoice.name))
+      searchForBeach(allTemps.filter(t => t.location.region?.name === regionChoice.name))
     } else if (regionType == RegionTypes.Municipality) {
-      searchForBeach(allTemps.filter(t => t.location.subregion.name === regionChoice.name))
+      searchForBeach(allTemps.filter(t => t.location.subregion?.name === regionChoice.name))
     }
   }, (err) => {
     console.clear()
