@@ -1,5 +1,6 @@
 #! /usr/bin/env node --no-warnings --experimental-modules
 // the above is for declaring the runtime, i.e node, and suppressing the ESM modules warning (not needed in node >=14)
+import { promises as fs } from 'fs'
 import inquirer from 'inquirer'
 import chalk from 'chalk'
 import autocompletePrompt from 'inquirer-autocomplete-prompt'
@@ -27,15 +28,16 @@ const slugify = (str) => str.toString().toLowerCase()
 const args = slugify(process.argv.slice(2).toString()).split(",")
 const hasArg = (str) => [].slice.call(args).some(a => a.replace(/\-/g, '') === slugify(str))
 const log = (str) => { (hasArg('debug') || hasArg('d')) && console.log(chalk.yellowBright(str)) }
+const allTemps = await getTemperatures()
+const counties = [], municipalities = [], beaches = []
 
-const allTemps = await fetch(apiEndpoint).then(r => r.json().then(d => d)),
-  counties = [], municipalities = [], beaches = []
 if (!allTemps) { throw new Error('Could not fetch water temperatures') }
 allTemps.forEach(temp => {
   counties.indexOf(temp.location.region?.name) === -1 && counties.push(temp.location.region?.name)
   municipalities.indexOf(temp.location.subregion?.name) === -1 && municipalities.push(temp.location.subregion?.name)
   beaches.indexOf(temp.location.name) === -1 && beaches.push(temp.location.name)
 })
+
 counties.sort()
 municipalities.sort()
 beaches.sort()
@@ -113,7 +115,6 @@ function chooseRegion(regionType) {
     interruptedKeyname: 'escape'
   }]).then(regionChoice => {
     log(`Region choice: ${regionChoice.name}`)
-    // if we chose a beach, just log the temp
     if (regionType == RegionTypes.Beach) {
       logTemp(allTemps.find(t => t.location.name === regionChoice.name))
     }
@@ -128,12 +129,10 @@ function chooseRegion(regionType) {
   })
 }
 
-// HELPERS
-
 function parseArg() {
   if (!args[0].length) { return }
-  log("PARSING ARGS")
-  log(`${args}`)
+  log("Parsing args")
+  log(`Args: ${args}`)
   if (hasArg('help') || hasArg('?') || hasArg('h')) {
     log(`Help argument passed, showing help text and exiting`)
     return showHelpAndExit()
@@ -170,11 +169,39 @@ function parseArg() {
     } else {
       console.log(`Fant ikke badetemperatur for '${beach}'\n`)
     }
-    // quitApp()
   }
 }
 
-function logTemp(beach, params) {
+async function getTemperatures() {
+  log("Getting temperatures")
+  const caching_timeout = 1000 * 60 * 60 * 24 // 24 hours
+  try {
+    const cache_file = await fs.readFile('./cache.json', 'utf8')
+    if (cache_file) {
+      log(`cache_file.length: ${cache_file.length}`)
+      let cache = JSON.parse(cache_file)
+      if (cache.timestamp + caching_timeout < Date.now()) {
+        log('Cache is fresh')
+        log(cache.data)
+        return cache.data
+      }
+    } else {
+      log('Cache file timed out - Fetching fresh data')
+      return await getFreshData()
+    }
+  } catch (err) {
+    log("No cache file found, fetching fresh data")
+    return await getFreshData()
+  }
+  async function getFreshData() {
+    const tempData = await fetch(apiEndpoint).then(r => r.json().then(d => d))
+    log('Fetched fresh data')
+    await fs.writeFile('./cache.json', JSON.stringify({ timestamp: Date.now(), data: tempData }))
+    return tempData
+  }
+}
+
+function logTemp(beach) {
   if (hasArg('short') || hasArg('s')) {
     console.log(temp(beach.temperature))
   } else if (hasArg('verbose') || hasArg('v') || hasArg('l')) {
