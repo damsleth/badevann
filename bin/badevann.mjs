@@ -1,6 +1,7 @@
 #! /usr/bin/env node --no-warnings --experimental-modules
 // the above is for declaring the runtime, i.e node, and suppressing the ESM modules warning (not needed in node >=14)
 import { promises as fs } from 'fs'
+import settings from './settings.js'
 import inquirer from 'inquirer'
 import chalk from 'chalk'
 import autocompletePrompt from 'inquirer-autocomplete-prompt'
@@ -8,26 +9,39 @@ import InterruptedPrompt from 'inquirer-interrupted-prompt'
 InterruptedPrompt.replaceAllDefaults(inquirer)
 inquirer.registerPrompt('autocomplete', InterruptedPrompt.from(autocompletePrompt))
 
+// TODO
+/*
+User settings:
+  default output: menu(default), short (temp only), normal (Name, date, temp), verbose (Name, date, temp, location, region, subregion)
+  default beach: none(default)
+  beaches listed: 10, 20(default), 50, 100
+  cache timeout: 8h(default), custom
+*/
+
 const RegionTypes = {
   County: { name: "County", plural: "Counties", localName: "Fylke" },
   Municipality: { name: "Municipality", plural: "Municipalities", localName: "Kommune" },
   Beach: { name: "Beach", plural: "Beaches", localName: "Strand" }
 }
 
+const userSettings = await settings.getSettings()
+
 const menu = [
   { name: "🔎 Søk etter badeplass", action: searchForBeach },
   { name: "🗺  Velg fylke", action: chooseRegion, param: RegionTypes.County },
   { name: "📍 Velg kommune", action: chooseRegion, param: RegionTypes.Municipality },
   { name: "📈  Høyeste badetemperaturer i dag", action: getHighestTemperatures },
+  { name: "⚙️  Endre innstillinger", action: getHighestTemperatures },
   { name: "❓ Hjelp", action: showHelpAndMenu },
   { name: "👋 Avslutt", action: quitApp }
 ]
 
 const apiEndpoint = "https://www.yr.no/api/v0/regions/NO/watertemperatures"
-const slugify = (str) => str.toString().toLowerCase()
+const slugify = (str) => str.toString().toLowerCase().trim()
 const args = slugify(process.argv.slice(2).toString()).split(",")
 const hasArg = (str) => [].slice.call(args).some(a => a.replace(/\-/g, '') === slugify(str))
-const log = (str) => { (hasArg('debug') || hasArg('d')) && console.log(chalk.yellowBright(str)) }
+const isDebug = (hasArg('debug') || hasArg('d'))
+const log = (str) => { isDebug && console.log(chalk.yellowBright(str)) }
 const allTemps = await getTemperatures()
 const counties = [], municipalities = [], beaches = []
 
@@ -44,15 +58,17 @@ beaches.sort()
 
 log("Showing menu")
 try {
-  console.clear()
-  parseArg()
+  !isDebug && console.clear()
+  parseArgs()
   showMenu()
 } catch (err) {
   log(err)
   console.log("ERROR! quitting")
 }
 
-function showMenu() { chooseMenu(menu).then(answer => { answer && answer.action(answer.param) }) }
+function showMenu() {
+  chooseMenu(menu).then(answer => { answer && answer.action(answer.param) })
+}
 
 function chooseMenu(menuChoices) {
   log(`Listing menu`)
@@ -124,12 +140,13 @@ function chooseRegion(regionType) {
       searchForBeach(allTemps.filter(t => t.location.subregion?.name === regionChoice.name))
     }
   }, (err) => {
+    log(`error:\n${err}`)
     console.clear()
     showMenu()
   })
 }
 
-function parseArg() {
+function parseArgs() {
   if (!args[0].length) { return }
   log("Parsing args")
   log(`Args: ${args}`)
@@ -148,7 +165,7 @@ function parseArg() {
     a == 'd'))[0]
   if (!beach?.length) { return }
 
-  // all other arguments, we assume it's a beach
+  // all other arguments, assuming it's a beach
   log(`Beach chosen: ${beach}`)
   let loc = allTemps.find(t => t.location.name.toLowerCase() === beach)
   if (loc) {
@@ -212,10 +229,17 @@ Lokasjon\t: ${beach.location.urlPath}
 Kart\t\t: https://google.com/maps?q=${beach.location.position.lat},${beach.location.position.lon}
 ${beach.sourceDisplayName ? `Kilde\t\t: ${beach.sourceDisplayName}` : ''}\n`)
   }
+  else if (hasArg('iso')) {
+    console.log(`${beach.location.name} ${new Date(beach.time).toISOString()}: ${temp(beach.temperature)} `)
+  }
   else {
     console.log(`${beach.location.name} ${new Date(beach.time).toLocaleDateString('nb-no')}: ${temp(beach.temperature)} `)
   }
   log(JSON.stringify(beach, null, 2))
+}
+
+function getDate(date) {
+
 }
 
 function temp(c) {
