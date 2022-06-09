@@ -19,10 +19,12 @@ import { log } from './utils.js'
 async function getTempData() {
   const apiEndpoint = "https://www.yr.no/api/v0/regions/NO/watertemperatures"
   const cacheTimeout = 1000 * 60 * 60 * 24 // 24 hours
-  log("Getting temperatures")
+  log("Getting tempdata")
   try {
+    log("Trying to read from ./cache.json")
     const cache_file = await fs.readFile('./cache.json', 'utf8')
     if (cache_file) {
+      log("Cache file found")
       log(`Cache file.length: ${cache_file.length}`)
       let cache = JSON.parse(cache_file)
       let date = new Date()
@@ -30,7 +32,7 @@ async function getTempData() {
       let cacheAge = now - cache.Timestamp
       let cacheFresh = cacheAge < cacheTimeout
       log(`Cache age: ${cacheAge}`)
-      if (!!cacheFresh) {
+      if (cacheFresh) {
         log('Cache is fresh')
         const cachedData = {
           Timestamp: cache.Timestamp,
@@ -41,10 +43,10 @@ async function getTempData() {
         }
         return cachedData
       }
-    }
-    else {
-      log('Cache is stale, fetching fresh data')
-      return await getFreshData()
+      else {
+        log('Cache is stale, fetching fresh data')
+        return await getFreshData()
+      }
     }
   } catch (err) {
     log("No cache file found, fetching fresh data")

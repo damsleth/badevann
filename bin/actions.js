@@ -2,7 +2,9 @@ import chalk from 'chalk'
 import inquirer from 'inquirer'
 import * as settings from './settings.js'
 import { counties, municipalities, beaches, temperatures } from './tempdata.js'
-import { log, logTemp, getColor } from './utils.js'
+import { log, logTemp, getColor, getSymbol } from './utils.js'
+
+const userSettings = async () => await settings.getUserSettings()
 
 const RegionTypes = {
   County: { name: "County", plural: "Counties", localName: "Fylke" },
@@ -10,7 +12,7 @@ const RegionTypes = {
   Beach: { name: "Beach", plural: "Beaches", localName: "Strand" }
 }
 
-const menu = [
+const mainMenu = [
   { name: "🔎 Søk etter badeplass", action: searchForBeach },
   { name: "🗺  Velg fylke", action: chooseRegion, param: RegionTypes.County },
   { name: "📍 Velg kommune", action: chooseRegion, param: RegionTypes.Municipality },
@@ -25,16 +27,32 @@ const menu = [
  * optionally quits the app if the answer is quit or escape is pressed
  */
 export function showMainMenu() {
-  log(`Listing menu`)
+  return showMenu(
+    mainMenu,
+    "Main Menu",
+    `Velkommen til Badevann! 🏖\n${temperatures.length} oppdaterte badetemperaturer`
+  )
+}
+
+/**
+ * 
+ * @param {*} choices List of choices to show (Array<{name: string, action: string, param?:string}>)
+ * @param {*} title Title of the menu
+ * @param {*} message Message shown in the top of the menu
+ * @param {*} type default "list"
+ * @returns the action callback of the chosen menu item 
+ */
+export function showMenu(choices, title, message, type = "list") {
+  title && log(`Listing ${title}`)
   return inquirer.prompt([{
-    type: "list",
+    type: type,
     name: "name",
-    prefix: "",
-    message: `Velkommen til Badevann! 🏖\n${temperatures.length} oppdaterte badetemperaturer`,
-    choices: menu
+    message: message,
+    choices: choices,
+    interruptedKeyname: 'escape'
   }])
-    .then((menuChoice) => {
-      let answer = menu.find(m => m.name === menuChoice.name)
+    .then((answerObj) => {
+      let answer = choices.find(choice => choice.name === answerObj.name)
       return answer && answer.action(answer.param)
     }, () => quitApp())
 }
@@ -50,7 +68,7 @@ function searchForBeach(beaches = temperatures, sortByTemp = false) {
     ? beaches.sort((a, b) => b.temperature > a.temperature ? 1 : -1)
     : beaches.sort((a, b) => a.location.name > b.location.name ? 1 : -1)
   let beachNames = beaches.map(
-    t => `${t.location.name}\u00a0${Array.from(" ".repeat(32 - t.location.name.length)).join('')} ${getColor(t.temperature)}`)
+    t => `${t.location.name}\u00a0${Array.from(" ".repeat(32 - t.location.name.length)).join('')} ${getSymbol(t.temperature)} ${getColor(t.temperature)}`)
   inquirer.prompt([
     {
       type: 'autocomplete',
@@ -147,9 +165,7 @@ function showHelp() {
  * show help, then returns to the main menu
  */
 function showHelpAndMenu() {
-  console.clear()
-  showHelp()
-  showMainMenu()
+  console.clear(); showHelp(); showMainMenu()
 }
 
 /**
@@ -157,18 +173,11 @@ function showHelpAndMenu() {
  * used primarily when running the app with the -h flag
  */
 export function showHelpAndExit() {
-  console.clear()
-  showHelp()
-  process.exit(0)
+  console.clear(); showHelp(); process.exit(0)
 }
 
-/**
- * 
- * @param {string} msg - custom exit message
- */
-function quitApp(msg) {
+function quitApp() {
   console.clear()
-  !!msg ? console.log(chalk.cyanBright(`\n\t${msg}\n`)) :
-    console.log(chalk.cyanBright("\n\t☀️  Hopp i havet! 🏖\n"))
+  console.log(chalk.cyanBright("\n\t  🔆 Hopp i havet! 🏖\n"))
   process.exit(0)
 }

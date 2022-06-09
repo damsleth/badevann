@@ -10,7 +10,7 @@ import InterruptedPrompt from 'inquirer-interrupted-prompt'
 InterruptedPrompt.replaceAllDefaults(inquirer)
 inquirer.registerPrompt('autocomplete', InterruptedPrompt.from(autocompletePrompt))
 
-const userSettings = await settings.getSettings()
+const userSettings = await settings.getUserSettings()
 
 log("Showing menu")
 try {
