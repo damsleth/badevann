@@ -12,12 +12,15 @@ const RegionTypes = {
   Beach: { name: "Beach", plural: "Beaches", localName: "Strand" }
 }
 
+/**
+ * Main menu actions and related functions with optional parameters
+ */
 const mainMenu = [
   { name: "🔎 Søk etter badeplass", action: searchForBeach },
   { name: "🗺  Velg fylke", action: chooseRegion, param: RegionTypes.County },
   { name: "📍 Velg kommune", action: chooseRegion, param: RegionTypes.Municipality },
   { name: "📈 Høyeste badetemperaturer i dag", action: getHighestTemperatures },
-  { name: "⚙️  Endre innstillinger", action: settings.changeSettings },
+  // { name: "⚙️  Endre innstillinger", action: settings.changeSettings },
   { name: "❓ Hjelp", action: showHelpAndMenu },
   { name: "👋 Avslutt", action: quitApp }
 ]
@@ -149,14 +152,15 @@ function showHelp() {
 
     ${chalk.yellowBright('PARAMETRE')}:
     help | h: vis denne teksten
-    short | s: vis bare vanntemperatur
     verbose | v: vis mer utfyllende info om badeplassen sammen med vanntemperaturen
+    iso | i : vis tidspunkt for måleravlesning på ISO 8601-format
+    short | s: vis bare vanntemperatur
     nocolor: ikke fargelegg badetemperaturene
     debug | d : vis utfyllende info ved bruk
-    iso : vis tidspunkt for måleravlesning på ISO 8601-format
 
     ${chalk.yellowBright('OM DATAENE')}:
-    Dataene kommer primært fra yr.no Ved feil i appen, sjekk nettsiden eller lag et issue på github.
+    Dataene kommer primært fra yr.no.  
+    Ved feil i appen, sjekk nettsiden eller lag et issue på github.  
     Denne appen er skrevet av @damsleth <https://github.com/damsleth>
     `)
 }

@@ -10,12 +10,9 @@ export const isDebug = (hasArg('debug') || hasArg('d'))
 
 export const userSettings = async () => await getUserSettings()
 
-function getUserHome() {
-  return process.env.HOME || process.env.USERPROFILE;
-}
-
-export const settingsFileName = `${getUserHome()}/.badevann/settings.json`
-export const cacheFileName = `${getUserHome()}/.badevann/cache.json`
+const userHome = () => process.env.HOME || process.env.USERPROFILE
+export const settingsFileName = `${userHome()}/.badevann/settings.json`
+export const cacheFileName = `${userHome()}/.badevann/cache.json`
 
 export async function parseArgs() {
   if (!args[0].length) { log("No arguments given"); return }
@@ -89,13 +86,13 @@ export function getColor(c) {
   log(`getting color temperature for temp ${c}`)
   function getColor(c) {
     switch (true) {
-      case (c >= 26):
+      case (c >= 25):
         return 'red'
-      case (c >= 24 && c < 26):
+      case (c >= 22 && c < 25):
         return 'yellow'
-      case (c >= 19 && c < 24):
+      case (c >= 17 && c < 22):
         return 'green'
-      case (c >= 14 && c < 19):
+      case (c >= 15 && c < 17):
         return 'cyan'
       case (c < 15):
         return 'blue'

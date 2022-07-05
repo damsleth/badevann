@@ -78,7 +78,7 @@ async function getTempData() {
     }
 
     // there's duplicate data here, but it's better doing it once per remote fetch than every time
-    // takes up slightly more space, but saves cpu cycles
+    // takes up more space (SEVERAL KILOBYTES!!!) but saves cpu cycles
     await outputJson(cacheFileName, data)
     return data
   }
