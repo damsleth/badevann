@@ -10,6 +10,13 @@ export const isDebug = (hasArg('debug') || hasArg('d'))
 
 export const userSettings = async () => await getUserSettings()
 
+function getUserHome() {
+  return process.env.HOME || process.env.USERPROFILE;
+}
+
+export const settingsFileName = `${getUserHome()}/.badevann/settings.json`
+export const cacheFileName = `${getUserHome()}/.badevann/cache.json`
+
 export async function parseArgs() {
   if (!args[0].length) { log("No arguments given"); return }
   log("Parsing args")
@@ -110,13 +117,13 @@ export function getSymbol(c) {
         return '🥵'
       case (c >= 22 && c < 25):
         return '😎'
-      case (c >= 19 && c < 22):
+      case (c >= 20 && c < 22):
         return '😁'
-      case (c >= 17 && c < 19):
+      case (c >= 17 && c < 20):
         return '😊'
-      case (c >= 14 && c < 17):
+      case (c >= 15 && c < 17):
         return '😑'
-      case (c >= 10 && c < 14):
+      case (c >= 10 && c < 15):
         return '🥶'
       case (c < 10):
         return '⛄️'

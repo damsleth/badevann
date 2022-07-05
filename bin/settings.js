@@ -1,7 +1,8 @@
-import { promises as fs } from 'fs'
 import { showMainMenu, showMenu } from './actions.js'
-import { log } from './utils.js'
+import { log, settingsFileName } from './utils.js'
 import { beaches } from './tempdata.js'
+import pkg from 'fs-extra'
+const { outputJson, readFile, stat } = pkg
 
 var UserSettingTypes = {
   Output: {
@@ -39,7 +40,7 @@ export async function changeSettings() {
     { name: "Endre cache timeout", action: updateUserSettings, param: UserSettingTypes.CacheTimeout },
     { name: "Gå tilbake til menyen", action: showMainMenu }
   ]
-  showMenu(settingsChoices,"Settings Menu","Endre instillinger")
+  showMenu(settingsChoices, "Settings Menu", "Endre instillinger")
 }
 
 export async function updateUserSettings(key, value) {
@@ -53,10 +54,11 @@ export async function updateUserSettings(key, value) {
  */
 export async function getUserSettings() {
   try {
-    log(`Reading settings from ${settingsFile}`)
-    const settingsFile = await fs.readFile('./settings.json', 'utf8')
+    log(`Reading settings from ${settingsFileName}`)
+    const settingsFile = await readFile(settingsFileName, { encoding: 'utf8' })
     if (settingsFile) {
-      log(`Settings file length: ${settingsFile.length}`)
+      let settingsFileSize = (await stat(settingsFileName)).size
+      log(`Settings file size: ${settingsFileSize} bytes`)
       let settings = JSON.parse(settingsFile)
       return settings
     }
@@ -72,5 +74,5 @@ async function createUserSettings() {
     let setting = UserSettingTypes[key]
     settings[setting.name] = setting.default
   }
-  await fs.writeFile('./settings.json', JSON.stringify(settings))
+  await outputJson(settingsFileName, settings)
 }

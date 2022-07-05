@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
-import { promises as fs } from 'fs'
-import { log } from './utils.js'
+import { log, cacheFileName } from './utils.js'
+import pkg from 'fs-extra'
+const { outputJson, readFile, stat } = pkg
 
 /**
  * TempData : { 
@@ -21,17 +22,18 @@ async function getTempData() {
   const cacheTimeout = 1000 * 60 * 60 * 24 // 24 hours
   log("Getting tempdata")
   try {
-    log("Trying to read from ./cache.json")
-    const cache_file = await fs.readFile('./cache.json', 'utf8')
+    log(`Trying to read from ${cacheFileName}`)
+    const cache_file = await readFile(cacheFileName, { encoding: 'utf8' })
     if (cache_file) {
       log("Cache file found")
-      log(`Cache file.length: ${cache_file.length}`)
+      let cacheFileSize = (await stat(cacheFileName)).size
+      log(`Cache size: ${Math.round(cacheFileSize / 1000)} KB`)
       let cache = JSON.parse(cache_file)
       let date = new Date()
       let now = date.getTime()
       let cacheAge = now - cache.Timestamp
       let cacheFresh = cacheAge < cacheTimeout
-      log(`Cache age: ${cacheAge}`)
+      log(`Cache age : ${(cacheAge / 1000 / 60).toFixed(1)} min`)
       if (cacheFresh) {
         log('Cache is fresh')
         const cachedData = {
@@ -77,7 +79,7 @@ async function getTempData() {
 
     // there's duplicate data here, but it's better doing it once per remote fetch than every time
     // takes up slightly more space, but saves cpu cycles
-    await fs.writeFile('./cache.json', JSON.stringify(data))
+    await outputJson(cacheFileName, data)
     return data
   }
 }
