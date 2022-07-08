@@ -7,7 +7,7 @@ Minimum påkrevde versjon av node er **12**
 ****
 Kjør følgende fra terminalen  
 `npm i -g badevann`  
-Når installasjonen er ferdig kan du bare skrive `badevann`
+Når installasjonen er ferdig kan du bare skrive `badevann`, så er du i gang.  
 
 # BRUK 💻
 `badevann` lar deg velge badeplass etter fylke eller kommune, søke etter badeplasser, og sjekke dagens høyeste badetemperaturer.
@@ -19,7 +19,7 @@ Alternativt kan du skrive `badevann <badeplass>`, så henter den ut temperaturer
 `i` eller `iso` vis tidspunkt for måleravlesning på ISO 8601-format  
 `s` eller `short` vis mer detaljert info om badeplassen  
 `nocolor` ikke fargelegg temperaturen (<20 er blå, 20-25 er grønn og >25 er rød)   
-`debug` vis utfyllende info ved bruk   
+`d` eller `debug` vis utfyllende info ved bruk   
 
 # TODO ⚙️
 Settings: Lar deg velge standard badeplass, standard utskrift, m.m

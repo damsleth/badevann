@@ -3,20 +3,6 @@ import { log, cacheFileName } from './utils.js'
 import pkg from 'fs-extra'
 const { outputJson, readFile, stat } = pkg
 
-/**
- * TempData : { 
- * Counties: Array<String>,
- * Municipalities: Array<String>,
- * Beaches: Array<String>, 
- * Temperatures: Array<Object>
- *  }
- * @returns {Promise<{Timestamp:string,
- * Data:Array<Tempdata>,
- * Counties:Array<string>,
- * Municipalities:Array<string>,
- * Beaches:Array<string>}>}
- */
-
 async function getTempData() {
   const apiEndpoint = "https://www.yr.no/api/v0/regions/NO/watertemperatures"
   const cacheTimeout = 1000 * 60 * 60 * 24 // 24 hours
@@ -84,7 +70,7 @@ async function getTempData() {
   }
 }
 
-const tempData = await getTempData()
+export const tempData = await getTempData()
 export const counties = tempData.Counties
 export const municipalities = tempData.Municipalities
 export const beaches = tempData.Beaches

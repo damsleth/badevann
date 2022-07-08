@@ -4,8 +4,6 @@ import * as settings from './settings.js'
 import { counties, municipalities, beaches, temperatures } from './tempdata.js'
 import { log, logTemp, getColor, getSymbol } from './utils.js'
 
-const userSettings = async () => await settings.getUserSettings()
-
 const RegionTypes = {
   County: { name: "County", plural: "Counties", localName: "Fylke" },
   Municipality: { name: "Municipality", plural: "Municipalities", localName: "Kommune" },
@@ -20,7 +18,7 @@ const mainMenu = [
   { name: "🗺  Velg fylke", action: chooseRegion, param: RegionTypes.County },
   { name: "📍 Velg kommune", action: chooseRegion, param: RegionTypes.Municipality },
   { name: "📈 Høyeste badetemperaturer i dag", action: getHighestTemperatures },
-  // { name: "⚙️  Endre innstillinger", action: settings.changeSettings },
+  { name: "⚙️  Endre innstillinger", action: settings.showSettingsMenu },
   { name: "❓ Hjelp", action: showHelpAndMenu },
   { name: "👋 Avslutt", action: quitApp }
 ]
@@ -33,7 +31,7 @@ export function showMainMenu() {
   return showMenu(
     mainMenu,
     "Main Menu",
-    `Velkommen til Badevann! 🏖\n${temperatures.length} oppdaterte badetemperaturer`
+    `Velkommen til Badevann! Med 🏖\n${temperatures.length} oppdaterte badetemperaturer`
   )
 }
 
@@ -43,9 +41,11 @@ export function showMainMenu() {
  * @param {*} title Title of the menu
  * @param {*} message Message shown in the top of the menu
  * @param {*} type default "list"
+ * @param {*} defaultAction a default action which all menu items will take (function)
+ * @param {*} defaultParam a default param all answer actions will use (string)
  * @returns the action callback of the chosen menu item 
  */
-export function showMenu(choices, title, message, type = "list") {
+export function showMenu(choices, title, message, type = "list", defaultAction, defaultParam) {
   title && log(`Listing ${title}`)
   return inquirer.prompt([{
     type: type,
@@ -56,8 +56,13 @@ export function showMenu(choices, title, message, type = "list") {
   }])
     .then((answerObj) => {
       let answer = choices.find(choice => choice.name === answerObj.name)
+      if (defaultAction) { answer.action = defaultAction }
+      if (defaultParam) { answer.param = { key: defaultParam, value: answer.val } }
       return answer && answer.action(answer.param)
-    }, () => quitApp())
+    }, (err) => {
+      log(`ERROR:\n${err}`)
+      quitApp()
+    })
 }
 
 /**
@@ -76,7 +81,7 @@ function searchForBeach(beaches = temperatures, sortByTemp = false) {
     {
       type: 'autocomplete',
       name: 'name',
-      pageSize: 20,
+      pageSize: settings.userSettings.beachCount,
       message: 'Søk etter badeplass (esc for å gå tilbake til menyen)',
       interruptedKeyname: 'escape',
       source: (_, srch) => {
@@ -92,6 +97,7 @@ function searchForBeach(beaches = temperatures, sortByTemp = false) {
       console.clear()
       logTemp(chosenBeach)
     }, (err) => {
+      log(err)
       console.clear()
       showMainMenu()
     })
@@ -105,16 +111,21 @@ function searchForBeach(beaches = temperatures, sortByTemp = false) {
  */
 function chooseRegion(regionType) {
   log(`Listing region type ${regionType.name}`)
-  let regions = regionType == RegionTypes.County
+  let regions = (regionType == RegionTypes.County
     ? counties : regionType == RegionTypes.Municipality
-      ? municipalities : beaches
+      ? municipalities : beaches).filter(region => region)
+  log(`Got ${regions.length} ${regionType.plural}`)
   return inquirer.prompt([{
-    type: "list",
+    type: 'autocomplete',
     name: "name",
-    message: `Velg ${regionType.localName}`,
     pageSize: 20,
+    message: `Velg ${regionType.localName}`,
     choices: regions,
-    interruptedKeyname: 'escape'
+    interruptedKeyname: 'escape',
+    source: (_, srch) => {
+      return !srch ? regions
+        : regions.filter(b => b.toLowerCase().indexOf(srch.toLowerCase()) > -1)
+    },
   }]).then(regionChoice => {
     log(`Region choice: ${regionChoice.name}`)
     if (regionType == RegionTypes.Beach) {
@@ -127,7 +138,7 @@ function chooseRegion(regionType) {
     }
   }, (err) => {
     log(`error:\n${err}`)
-    console.clear()
+    // console.clear()
     showMainMenu()
   })
 }

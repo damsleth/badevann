@@ -3,19 +3,19 @@
 
 import inquirer from 'inquirer'
 import * as settings from './settings.js'
+import { isDebug, log, parseArgs } from './utils.js'
 import { showMainMenu } from './actions.js'
-import { log, isDebug, parseArgs } from './utils.js'
 import autocompletePrompt from 'inquirer-autocomplete-prompt'
 import InterruptedPrompt from 'inquirer-interrupted-prompt'
 InterruptedPrompt.replaceAllDefaults(inquirer)
 inquirer.registerPrompt('autocomplete', InterruptedPrompt.from(autocompletePrompt))
 
-const userSettings = await settings.getUserSettings()
+export const userSettings = await settings.getUserSettings()
 
-log("Showing menu")
 try {
   !isDebug && console.clear()
   parseArgs()
+  log(`Showing main menu`)
   showMainMenu()
 } catch (err) {
   log(err)
