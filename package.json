@@ -6,10 +6,18 @@
   "bin": "bin/badevann.mjs",
   "keywords": [
     "badevann",
+    "water",
     "vanntemperatur",
-    "temperature"
+    "temperature",
+    "cli",
+    "norway",
+    "norge"
   ],
-  "author": "damsleth",
+  "author": {
+    "name": "Carl Joakim 'Kim' Damsleth",
+    "email": "kim@damsleth.no",
+    "url": "https://www.damsleth.no"
+  },
   "license": "WTFPL",
   "dependencies": {
     "chalk": "^5",
