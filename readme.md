@@ -21,9 +21,6 @@ Alternativt kan du skrive `badevann <badeplass>`, så henter den ut temperaturer
 `nocolor` ikke fargelegg temperaturen (<20 er blå, 20-25 er grønn og >25 er rød)   
 `d` eller `debug` vis utfyllende info ved bruk   
 
-# TODO ⚙️
-Settings: Lar deg velge standard badeplass, standard utskrift, m.m
-
 # OM DATAENE 💽
 Dataene kommer primært fra YR. Ved feil i appen, sjekk nettsiden eller send en PR
 
