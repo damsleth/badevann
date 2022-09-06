@@ -7,7 +7,6 @@ import { isDebug, log, parseArgs } from './utils.js'
 import { showMainMenu } from './actions.js'
 import autocompletePrompt from 'inquirer-autocomplete-prompt'
 import InterruptedPrompt from 'inquirer-interrupted-prompt'
-InterruptedPrompt.replaceAllDefaults(inquirer)
 inquirer.registerPrompt('autocomplete', InterruptedPrompt.from(autocompletePrompt))
 
 export const userSettings = await settings.getUserSettings()

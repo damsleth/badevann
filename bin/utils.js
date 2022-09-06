@@ -45,7 +45,7 @@ export async function parseArgs() {
   if (loc) {
     log(`Found ${loc.location.name}`)
     // log(`logging temp for ${JSON.stringify(loc)}`)
-    logTemp(loc,settings.userSettings)
+    logTemp(loc, settings.userSettings)
     process.exit(0)
   } else {
     log(`Could not find '${beach}'`)
@@ -56,7 +56,7 @@ export async function parseArgs() {
         log(`Found ${fuzzy.length} matches,\nGrabbing the first one, which is '${fuzzy[0].location.name}'`)
       }
       else { log(`Found ${fuzzy.length} match, '${fuzzy[0].location.name}'`) }
-      logTemp(fuzzy[0],settings.userSettings)
+      logTemp(fuzzy[0], settings.userSettings)
       process.exit(0)
     } else {
       console.log(`Fant ikke badetemperatur for '${beach}'\n`)
@@ -90,9 +90,9 @@ export async function logTemp(beach, _userSettings) {
   log(`user settings: ${JSON.stringify(userSettings)}`)
   log(`outputformat: ${userSettings.outputFormat}`)
 
-  if (hasArg('short') || hasArg('s') ||  userSettings.outputFormat == 'tempOnly') {
+  if (hasArg('short') || hasArg('s') || userSettings.outputFormat == 'tempOnly') {
     console.log(getShortTemp(beach))
-  } else if (hasArg('verbose') || hasArg('v') || hasArg('l') ||  userSettings.outputFormat == 'long') {
+  } else if (hasArg('verbose') || hasArg('v') || hasArg('l') || userSettings.outputFormat == 'long') {
     console.log(getLongTemp(beach))
   }
   else if (hasArg('iso') || hasArg('i') || userSettings.outputFormat == 'iso') {

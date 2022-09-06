@@ -138,7 +138,6 @@ function chooseRegion(regionType) {
     }
   }, (err) => {
     log(`error:\n${err}`)
-    // console.clear()
     showMainMenu()
   })
 }
