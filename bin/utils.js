@@ -44,7 +44,6 @@ export async function parseArgs() {
   let loc = temperatures.find(t => t.location.name.toLowerCase() === beach)
   if (loc) {
     log(`Found ${loc.location.name}`)
-    // log(`logging temp for ${JSON.stringify(loc)}`)
     logTemp(loc, settings.userSettings)
     process.exit(0)
   } else {
@@ -73,9 +72,9 @@ function getRegularTemp(beach) {
 }
 
 function getLongTemp(beach) {
-  return `\n 🔆 ${beach.location.name.toUpperCase()} - ${beach.location.category.name}
+  return `\n🔆 ${beach.location.name.toUpperCase()} \t${beach.location.category.name}
 Badetemperatur\t: ${getColor(beach.temperature)}
-Måletidspunkt\t: ${new Date(beach.time).toLocaleDateString('nb-no')} ${new Date(beach.time).toLocaleTimeString('nb-no')}
+Måletidspunkt\t: ${hasArg('iso') ? `${new Date(beach.time).toISOString()}` : `${new Date(beach.time).toLocaleDateString('nb-no')} ${new Date(beach.time).toLocaleTimeString('nb-no')}`}
 Lokasjon\t: ${beach.location.urlPath}
 Kart\t\t: https://google.com/maps?q=${beach.location.position.lat},${beach.location.position.lon}
 ${beach.sourceDisplayName ? `Kilde\t\t: ${beach.sourceDisplayName}` : ''}\n`
@@ -105,8 +104,6 @@ export async function logTemp(beach, _userSettings) {
 }
 
 export function getColor(c) {
-  // silly loglevel
-  // log(`getting color temperature for temp ${c}`)
   function getColor(c) {
     switch (true) {
       case (c >= 25):
@@ -125,13 +122,10 @@ export function getColor(c) {
   }
   if (hasArg('nocolor')) return `${c}°C`
   let color = getColor(c)
-  // log(`color temperature is ${color} `)
   return chalk[color](c + '°C')
 }
 
 export function getSymbol(c) {
-  // silly
-  // log(`getting emoji for temp ${c}`)
   function getSymbol(c) {
     switch (true) {
       case (c >= 25):
