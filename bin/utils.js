@@ -16,7 +16,7 @@ export function log(str) { isDebug && console.log(chalk.yellowBright(str)) }
 
 
 // args override user settings
-export async function parseArgs() {
+export function parseArgs() {
   if (!args[0].length) { log("No arguments given"); return }
   log("Parsing args")
   log(`Args: ${args}`)
@@ -72,7 +72,7 @@ function getRegularTemp(beach) {
 }
 
 function getLongTemp(beach) {
-  return `\n🔆 ${beach.location.name.toUpperCase()} \t${beach.location.category.name}
+  return `\n🔆 ${beach.location.name.toUpperCase()} - ${beach.location.category.name}
 Badetemperatur\t: ${getColor(beach.temperature)}
 Måletidspunkt\t: ${hasArg('iso') ? `${new Date(beach.time).toISOString()}` : `${new Date(beach.time).toLocaleDateString('nb-no')} ${new Date(beach.time).toLocaleTimeString('nb-no')}`}
 Lokasjon\t: ${beach.location.urlPath}

@@ -49,7 +49,7 @@ var UserSettingTypes = {
  * Displays the user settings menu
  * @returns {Promise<void>}
  */
-export async function showSettingsMenu() {
+export function showSettingsMenu() {
   let settingsChoices = [
     { name: "Endre standard utskrift", action: showUserSetting, param: UserSettingTypes.Output },
     { name: "Endre standard badeplass", action: showUserSetting, param: UserSettingTypes.DefaultBeach },
@@ -61,7 +61,7 @@ export async function showSettingsMenu() {
   showMenu(settingsChoices, "Settings Menu", "Endre instillinger")
 }
 
-export async function showUserSetting(setting) {
+export function showUserSetting(setting) {
   showMenu(setting.choices, setting.message, "Endre instilling", setting.type, updateUserSetting, setting.name)
 }
 
