@@ -1,24 +1,32 @@
 {
   "name": "badevann",
-  "type": "module",
-  "version": "2.0.5",
+  "version": "2.0.6",
+  "license": "WTFPL",
   "description": "Kommandolinjeverktøy med badetemperaturer fra hele Norge",
   "bin": "bin/badevann.mjs",
+  "type": "module",
   "keywords": [
-    "badevann",
-    "water",
+    "badetemperatur",
     "vanntemperatur",
     "temperature",
-    "cli",
+    "badevann",
     "norway",
-    "norge"
+    "norge",
+    "water",
+    "cli"
   ],
   "author": {
     "name": "Carl Joakim 'Kim' Damsleth",
     "email": "kim@damsleth.no",
     "url": "https://www.damsleth.no"
   },
-  "license": "WTFPL",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/damsleth/badevann.git"
+  },
+  "bugs": {
+    "url": "https://github.com/damsleth/badevann/issues"
+  },
   "dependencies": {
     "chalk": "^5",
     "fs-extra": "^10",
