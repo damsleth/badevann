@@ -31,7 +31,7 @@ export function showMainMenu() {
   return showMenu(
     mainMenu,
     "Main Menu",
-    `Velkommen til Badevann! Med 🏖\n${temperatures.length} oppdaterte badetemperaturer`
+    `Velkommen til Badevann! 🏖\n🔆 ${temperatures.length} oppdaterte badetemperaturer`
   )
 }
 
@@ -76,7 +76,9 @@ function searchForBeach(beaches = temperatures, sortByTemp = false) {
     ? beaches.sort((a, b) => b.temperature > a.temperature ? 1 : -1)
     : beaches.sort((a, b) => a.location.name > b.location.name ? 1 : -1)
   let beachNames = beaches.map(
-    t => `${t.location.name}\u00a0${Array.from(" ".repeat(32 - t.location.name.length)).join('')} ${getSymbol(t.temperature)} ${getColor(t.temperature)}`)
+    t => `${t.location.name}\u00a0${Array.from(" ".repeat(32 - t.location.name.length))
+      .join('')} ${getSymbol(t.temperature)} ${getColor(t.temperature)}`
+  )
   inquirer.prompt([
     {
       type: 'autocomplete',
