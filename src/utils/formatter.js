@@ -1,9 +1,9 @@
 /**
  * Formatting utilities for displaying beach temperature data
  */
-import chalk from 'chalk';
-import { hasArg } from './args.js';
-import { TEMP_THRESHOLDS } from './constants.js';
+import chalk from 'chalk'
+import { hasArg } from './args.js'
+import { TEMP_THRESHOLDS } from './constants.js'
 
 /**
  * Get the appropriate color for a temperature value
@@ -12,11 +12,11 @@ import { TEMP_THRESHOLDS } from './constants.js';
  */
 export function getColoredTemperature(temperature) {
   if (hasArg('nocolor')) {
-    return `${temperature}°C`;
+    return `${temperature}°C`
   }
-  
-  const color = getTemperatureColor(temperature);
-  return chalk[color](`${temperature}°C`);
+
+  const color = getTemperatureColor(temperature)
+  return chalk[color](`${temperature}°C`)
 }
 
 /**
@@ -27,17 +27,17 @@ export function getColoredTemperature(temperature) {
 function getTemperatureColor(temperature) {
   switch (true) {
     case (temperature >= TEMP_THRESHOLDS.HOT):
-      return 'red';
+      return 'red'
     case (temperature >= TEMP_THRESHOLDS.WARM):
-      return 'yellow';
+      return 'yellow'
     case (temperature >= TEMP_THRESHOLDS.COMFORTABLE):
-      return 'green';
+      return 'green'
     case (temperature >= TEMP_THRESHOLDS.COOL):
-      return 'cyan';
+      return 'cyan'
     case (temperature < TEMP_THRESHOLDS.COOL):
-      return 'blue';
+      return 'blue'
     default:
-      return 'white';
+      return 'white'
   }
 }
 
@@ -48,26 +48,26 @@ function getTemperatureColor(temperature) {
  */
 export function getTemperatureEmoji(temperature) {
   if (hasArg('nocolor')) {
-    return '';
+    return ''
   }
-  
+
   switch (true) {
     case (temperature >= TEMP_THRESHOLDS.HOT):
-      return '🥵';
+      return '🥵'
     case (temperature >= TEMP_THRESHOLDS.WARM):
-      return '😎';
+      return '😎'
     case (temperature >= TEMP_THRESHOLDS.PLEASANT):
-      return '😁';
+      return '😁'
     case (temperature >= TEMP_THRESHOLDS.COMFORTABLE):
-      return '😊';
+      return '😊'
     case (temperature >= TEMP_THRESHOLDS.COOL):
-      return '😑';
+      return '😑'
     case (temperature >= TEMP_THRESHOLDS.COLD):
-      return '🥶';
+      return '🥶'
     case (temperature < TEMP_THRESHOLDS.COLD):
-      return '⛄️';
+      return '⛄️'
     default:
-      return '🔆';
+      return '🔆'
   }
 }
 
@@ -78,15 +78,15 @@ export function getTemperatureEmoji(temperature) {
  * @return {string} The formatted date string
  */
 export function formatDate(date, includeTime = false) {
-  const dateObj = new Date(date);
-  
+  const dateObj = new Date(date)
+
   if (hasArg('iso') || hasArg('i')) {
-    return dateObj.toISOString();
+    return dateObj.toISOString()
   }
-  
+
   if (includeTime) {
-    return `${dateObj.toLocaleDateString('nb-no')} ${dateObj.toLocaleTimeString('nb-no')}`;
+    return `${dateObj.toLocaleDateString('nb-no')} ${dateObj.toLocaleTimeString('nb-no')}`
   }
-  
-  return dateObj.toLocaleDateString('nb-no');
+
+  return dateObj.toLocaleDateString('nb-no')
 }

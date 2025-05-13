@@ -1,10 +1,10 @@
 /**
  * Display utilities for formatting and showing beach data
  */
-import chalk from 'chalk';
-import { hasArg } from '../utils/args.js';
-import { getColoredTemperature, getTemperatureEmoji, formatDate } from '../utils/formatter.js';
-import * as logger from '../utils/logger.js';
+import chalk from 'chalk'
+import { hasArg } from '../utils/args.js'
+import { getColoredTemperature, getTemperatureEmoji, formatDate } from '../utils/formatter.js'
+import * as logger from '../utils/logger.js'
 
 /**
  * Display a short temperature output (just the temperature)
@@ -12,7 +12,7 @@ import * as logger from '../utils/logger.js';
  * @return {string} Formatted temperature string
  */
 export function formatShortTemperature(beach) {
-  return getColoredTemperature(beach.temperature);
+  return getColoredTemperature(beach.temperature)
 }
 
 /**
@@ -21,7 +21,7 @@ export function formatShortTemperature(beach) {
  * @return {string} Formatted temperature string
  */
 export function formatRegularTemperature(beach) {
-  return `${beach.location.name} ${formatDate(beach.time)}: ${getColoredTemperature(beach.temperature)}`;
+  return `${beach.location.name} ${formatDate(beach.time)}: ${getColoredTemperature(beach.temperature)}`
 }
 
 /**
@@ -30,7 +30,7 @@ export function formatRegularTemperature(beach) {
  * @return {string} Formatted temperature string
  */
 export function formatIsoTemperature(beach) {
-  return `${beach.location.name} ${formatDate(beach.time)}: ${getColoredTemperature(beach.temperature)}`;
+  return `${beach.location.name} ${formatDate(beach.time)}: ${getColoredTemperature(beach.temperature)}`
 }
 
 /**
@@ -46,7 +46,7 @@ Måletidspunkt\t: ${formatDate(beach.time, true)}
 Lokasjon\t: ${beach.location.urlPath}
 Kart\t\t: https://google.com/maps?q=${beach.location.position.lat},${beach.location.position.lon}
 ${beach.sourceDisplayName ? `Kilde\t\t: ${beach.sourceDisplayName}` : ''}
-`;
+`
 }
 
 /**
@@ -56,12 +56,12 @@ ${beach.sourceDisplayName ? `Kilde\t\t: ${beach.sourceDisplayName}` : ''}
  * @return {string} Formatted beach item
  */
 export function formatBeachListItem(beach, padLength = 32) {
-  const name = beach.location.name;
-  const padding = Array.from(" ".repeat(Math.max(1, padLength - name.length))).join('');
-  const emoji = getTemperatureEmoji(beach.temperature);
-  const temperature = getColoredTemperature(beach.temperature);
-  
-  return `${name}\u00a0${padding} ${emoji} ${temperature}`;
+  const name = beach.location.name
+  const padding = Array.from(" ".repeat(Math.max(1, padLength - name.length))).join('')
+  const emoji = getTemperatureEmoji(beach.temperature)
+  const temperature = getColoredTemperature(beach.temperature)
+
+  return `${name}\u00a0${padding} ${emoji} ${temperature}`
 }
 
 /**
@@ -70,21 +70,21 @@ export function formatBeachListItem(beach, padLength = 32) {
  * @param {object} settings - User settings object
  */
 export function displayTemperature(beach, settings) {
-  logger.debug(`Displaying temperature for ${beach.location.name}`);
-  
+  logger.debug(`Displaying temperature for ${beach.location.name}`)
+
   // Handle command-line overrides first
   if (hasArg('short') || hasArg('s') || settings.outputFormat === 'tempOnly') {
-    console.log(formatShortTemperature(beach));
+    console.log(formatShortTemperature(beach))
   } else if (hasArg('verbose') || hasArg('v') || hasArg('l') || settings.outputFormat === 'long') {
-    console.log(formatLongTemperature(beach));
+    console.log(formatLongTemperature(beach))
   } else if (hasArg('iso') || hasArg('i') || settings.outputFormat === 'iso') {
-    console.log(formatIsoTemperature(beach));
+    console.log(formatIsoTemperature(beach))
   } else {
-    console.log(formatRegularTemperature(beach));
+    console.log(formatRegularTemperature(beach))
   }
-  
+
   // In debug mode, show the raw data
-  logger.debug(JSON.stringify(beach, null, 2));
+  logger.debug(JSON.stringify(beach, null, 2))
 }
 
 /**
@@ -111,7 +111,7 @@ export function displayHelp() {
     Dataene kommer primært fra yr.no.  
     Ved feil i appen, sjekk nettsiden eller lag et issue på github.  
     Denne appen er skrevet av @damsleth <https://github.com/damsleth>
-  `);
+  `)
 }
 
 /**
@@ -120,12 +120,12 @@ export function displayHelp() {
  * @return {string} The welcome message
  */
 export function getWelcomeMessage(temperatureCount) {
-  return `Velkommen til Badevann! 🏖\n🔆 ${temperatureCount} oppdaterte badetemperaturer`;
+  return `Velkommen til Badevann! 🏖\n🔆 ${temperatureCount} oppdaterte badetemperaturer`
 }
 
 /**
  * Display a farewell message when quitting
  */
 export function displayFarewell() {
-  console.log(chalk.cyanBright("\n\t  🔆 Hopp i havet! 🏖\n"));
+  console.log(chalk.cyanBright("\n\t  🔆 Hopp i havet! 🏖\n"))
 }

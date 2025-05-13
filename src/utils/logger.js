@@ -1,16 +1,16 @@
 /**
  * Logger utilities for consistent logging across the application
  */
-import chalk from 'chalk';
+import chalk from 'chalk'
 
-let isDebugMode = false;
+let isDebugMode = false
 
 /**
  * Set the debug mode for the logger
  * @param {boolean} value - Whether debug mode is enabled
  */
 export function setDebugMode(value) {
-  isDebugMode = value;
+  isDebugMode = value
 }
 
 /**
@@ -19,7 +19,7 @@ export function setDebugMode(value) {
  */
 export function debug(message) {
   if (isDebugMode) {
-    console.log(chalk.yellowBright(message));
+    console.log(chalk.yellowBright(message))
   }
 }
 
@@ -28,8 +28,8 @@ export function debug(message) {
  * @param {Error|string} error - The error to log
  */
 export function error(error) {
-  const errorMessage = error instanceof Error ? `${error.message}\n${error.stack}` : error;
-  console.error(chalk.redBright(`ERROR: ${errorMessage}`));
+  const errorMessage = error instanceof Error ? `${error.message}\n${error.stack}` : error
+  console.error(chalk.redBright(`ERROR: ${errorMessage}`))
 }
 
 /**
@@ -37,7 +37,7 @@ export function error(error) {
  * @param {string} message - The message to log
  */
 export function info(message) {
-  console.log(message);
+  console.log(message)
 }
 
 /**
@@ -45,6 +45,6 @@ export function info(message) {
  */
 export function clearConsole() {
   if (!isDebugMode) {
-    console.clear();
+    console.clear()
   }
 }
