@@ -3,3 +3,4 @@ cache.json
 settings.json
 todo.md
 .DS_Store
+**/.claude/settings.local.json

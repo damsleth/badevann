@@ -1,6 +1,6 @@
 {
   "name": "badevann",
-  "version": "2.0.6",
+  "version": "3.0.0",
   "license": "WTFPL",
   "description": "Kommandolinjeverktøy med badetemperaturer fra hele Norge",
   "bin": "bin/badevann.mjs",
@@ -36,6 +36,10 @@
     "node-fetch": "^3"
   },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "start": "node bin/badevann.mjs",
+    "dev": "node --inspect bin/badevann.mjs"
   }
 }
